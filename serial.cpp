@@ -13,14 +13,14 @@ struct Setting {
   SettingType type;
   void* value;
   const char* description;
-}
+};
 
 // dynamic settings list
 Setting settings[] = {
     {"fastmode", BOOL, &fastModeEnabled, "No clue"},
     {"verbose",  BOOL, &verboseLogging, "Verbose debug logging"},
     {"manual",   BOOL, &manualModeEnabled, "Manually test the IC via command"},
-    {"testcount", INT, &testCountInt, "Number of tests to run per IC"} // would this not increase false positive chance?
+    {"testcount", INT, &testCountInt, "Number of tests to run per IC"} // would this increase false positive chance?
 };
 
 void help() { // I haven't tested whether this compiles yet
