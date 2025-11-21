@@ -9,6 +9,8 @@ extern bool manualModeEnabled;
 extern int testCountInt;
 
 // Functions
+extern void serialMain(void *parameter);
+
 void help();
 void fastMode(bool state);
 void verbose(bool state);
