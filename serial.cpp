@@ -39,8 +39,14 @@ void serialMain(void *parameter) { // freeRTOS demands a parameter
 
     if (Serial.read() == "help") {
       help();
-    } else if (Serial.read() == "set") {
-      
+    } else if (Serial.read() == "set ") { // <-- heads up there is a space here
+      //  oh no
+      /*  scan for set, go past the space after "set "get the word by going through each letter until we get a space?
+       *  then check whether the letters correlate to a function.
+       *  check if the function is an int or bool.
+       *  if bool, scan the word till we get a \n? might be wrong
+       *  if int, count letters until we get \n
+       */
     }
   }
 }
