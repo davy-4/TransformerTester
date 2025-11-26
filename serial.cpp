@@ -7,6 +7,7 @@ bool fastModeEnabled = false;
 bool verboseLogging = false;
 bool manualModeEnabled = false;
 int testCountInt = 3;
+bool watchdogEnabled = false;
 
 enum SettingType {BOOL,INT};
 
@@ -28,6 +29,7 @@ Setting settings[] = {
   {"verbose",  BOOL, &verboseLogging, "Verbose debug logging"},
   {"manual",   BOOL, &manualModeEnabled, "Manually test the IC via command"},
   {"testcount", INT, &testCountInt, "Number of tests to run per IC"}, // might be useless
+  {"watchdog", BOOL, &watchdogEnabled, "Start daemon to check system health"},
 };
 
 Command commands[] = {
