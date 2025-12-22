@@ -13,7 +13,7 @@ enum SettingType {BOOL,INT};
 
 struct Command {
   const char* name;
-  void (*function)(const String&); // nice
+  void (*function)(const String&);
   const char* description;
   const char* usage;
 };
@@ -34,16 +34,28 @@ Setting settings[] = { // setting, datatype, variable, description
 };
 
 Command commands[] = { // command, function, description, usage
-  {"test", serial::placeholder, "Execute this command to test the IC", "test"}, // change with real function
+  {"test", serial::placeholder, "Execute this command to test the IC", "test"},
   {"help", serial::help, "Show this help table", "help"},
   {"set", serial::set, "Change the settings of the tester", "set <setting> <value>"},
 };
 const int commandCount = sizeof(commands) / sizeof(commands[0]);
 
+// helper function to pad text in tables, e.g., help table
+void printPadded(const String& text, size_t width, const String& padding) { // printPadded("text", 6, "#"); will print "text##"
+  Serial.print(text);
+  if (text.length() < width) {
+    for (size_t i = 0; i < width - text.length(); i++) {
+      Serial.print(padding);
+    }
+  }
+}
+
 void serial::serialMain(void *parameter) {
   while (true) {
     if (Serial.available()) {
       String input = Serial.readStringUntil('\n'); input.trim();  // clean whitespace
+      Serial.print("~/");
+      Serial.println(input); // echo the command
       if (input.length() == 0)
         continue;
 
@@ -71,16 +83,16 @@ void serial::serialMain(void *parameter) {
             }
           }
 
-          if (assumedDist <= 2) {   // format off linux, "command not found: x, did you mean xy?"
-            Serial.print("command not found: ");
+          if (assumedDist <= 2) {   // format off linux, "Command not found: x, did you mean xy?"
+            Serial.print("Command not found: ");
             Serial.print(cmd);
             Serial.print(", did you mean: ");
             Serial.print(assumedCmd);
             Serial.println("?");
-          } else { // "command not found: x, type 'help' for a list of commands."
-            Serial.print("command not found: ");
+          } else { // "Command not found: x, type 'help' for a list of commands."
+            Serial.print("Command not found: ");
             Serial.print(cmd);
-            Serial.print(", type 'help' for a list of commands.");
+            Serial.println(", type 'help' for a list of commands.");
           }
 
       }
@@ -90,32 +102,47 @@ void serial::serialMain(void *parameter) {
 }
 
 void serial::help() {
+  const size_t columnWidth = 12; // pad the setting column
+  const size_t columnWidthSecondary = 5; // pads the value column
+
   Serial.println("--- Commands ---");
   for (size_t i = 0; i < sizeof(commands)/sizeof(Command); i++) {
-    Serial.println(commands[i].name);
-    Serial.print("Description: ");
+    printPadded(commands[i].name, columnWidth, " ");
+    Serial.print(" | ");
     Serial.println(commands[i].description);
   }
+
+  Serial.println();
   Serial.println("--- Settings ---");
-  Serial.println("Usage: set [setting] value");
-  Serial.println("Hint: Current settings are displayed");
+  Serial.println("Usage: set [setting] (value)\n");
+
+  printPadded("setting", columnWidth, " ");
+  Serial.print(" | ");
+  printPadded("value", columnWidthSecondary, " ");
+  Serial.println(" | description");
+  Serial.println("-------------|-------|---------------------------------------------");
 
   for (size_t i = 0; i < sizeof(settings)/sizeof(Setting); i++) {
-      Serial.print(settings[i].name);
-      Serial.print(" ");
-      if (settings[i].type == BOOL) {
-        bool val = *(bool*)settings[i].value;
-        Serial.println(val ? "true" : "false");
+    printPadded(settings[i].name, columnWidth, " ");
+    Serial.print(" | ");
 
-      } else if (settings[i].type == INT) {
-          int val = *(int*)settings[i].value;
-          Serial.println(val);
-      }
+    String valueStr;
+    if (settings[i].type == BOOL) {
+      bool val = *(bool*)settings[i].value;
+      valueStr = val ? "true" : "false";
+    } else if (settings[i].type == INT) {
+      int val = *(int*)settings[i].value;
+      valueStr = String(val);
+    }
 
-      Serial.print("Description: ");
-      Serial.println(settings[i].description);
+    printPadded(valueStr, columnWidthSecondary, " ");
+    Serial.print(" | ");
+
+    // description
+    Serial.println(settings[i].description);
   }
 }
+
 
 void serial::set(String input) {
   String arg = input.substring(4);
@@ -125,11 +152,11 @@ void serial::set(String input) {
   }
   String key = arg.substring(0, seperator);
   String value = arg.substring(seperator + 1);
-  // todo: go through settings table names, if key matches a function on the list, change the corresponding value
-  /* optimization idea: could scan first 3 characters of functions to check whether they'd match, then check if key is actually a real setting
-   * might save on some memory, or slight speed increase
-   * first 3 characters lookup table needs to be automatically generated
-   */
+
+  Serial.println(key);
+  Serial.println(value);
+
+
 }
 
 void serial::placeholder(const String& input) {} // function placeholder

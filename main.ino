@@ -4,6 +4,15 @@
  *  5v 20mA per I/O pin
  *  8-bit AVR 16mhz
  *  2KB SRAM, 32KB FLASH, 1kb EEPROM
+ *  in kilobytes, 
+ * 
+ *  optimization-specific info
+ *  16,000,000 instructions per second, 62.5ns per instruction
+ *  latency target is 10ms, 10/0.0000625 = 160,000 instructions per sec
+ *  
+ *  list of functions and instructions used
+ *  digitalWrite() = ~50-60
+ *  digitalRead() = ~50
  */
 
 #include <Arduino.h>
@@ -15,16 +24,15 @@
 
 TaskHandle_t SerialHandle = NULL;
 
-void setup_2() {
+void setup() {
   Serial.begin(115200);
   init::initialize();
 
-
-  // Serial could use the most bytes; not much ram required for testing the IC
-  xTaskCreate(serial::serialMain, "Serial", 128, NULL, 1, &SerialHandle);
+  // heads up, 3rd arg is in words, not bytes
+  xTaskCreate(serial::serialMain, "Serial", 256, NULL, 1, &SerialHandle);
   vTaskStartScheduler();
 }
 
-void loop_2() {
+void loop() {
   // use FreeRTOS tasks
 }

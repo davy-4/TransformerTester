@@ -2,7 +2,7 @@
 
 #include <Arduino.h>
 
-class serial { // class conflict?
+class serial {
   public:
   // Settings
   static bool fastModeEnabled;
