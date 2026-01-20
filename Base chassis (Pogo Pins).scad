@@ -9,15 +9,15 @@ pinSpacing=1.5;
 pinDepth=2;
 //casing dimensisons
 wallWidth=1;
-extraPinInset=0.1;
+extraPinInset=-0.35;
 //pogo pin dimensions
 pogoDiameter=1.49;
 pogoHoleDiameter=1.49;//as reccomended by datasheet
 pogoLength=4;//length of main body of pin
 pogoPositionRatio=0.7;//where the pogo hole is positioned, 0 is on the outside of the inset, 1 is on the inside of the inset
-pogoLipRadius=1;
+pogoLipRadius=0.1;
 pogoLipHeight=0.5;
-holePadding=0.1;
+holePadding=0.3;
 pogoProtection=2.5;//eqivalent slot on the bottom for protecting the bottom of the pogo pins from damage. set to 0 to disable this, reccommended set to pogostemlength+0.5
 //miscellaenious
 $tol=0.01;
@@ -56,16 +56,17 @@ scale(10){
     pinInset(2);
     //pinInset(3);}
     }
-    pogoHoles(0,true);
-    pogoHoles(2,true);
-    pogoHoles(1,true);
+    lip=false;
+    pogoHoles(0,lip);
+    pogoHoles(2,lip);
+    pogoHoles(1,lip);
     
     
 }}
 
 module pinInset(pinNum){
     
-    width=tpinWidth+2*$clear+holePadding;
+    width=pogoDiameter+pogoLipRadius*2+holePadding;
     if (width<pogoLipRadius*2+pogoDiameter+holePadding){
 	width=pogoLipRadius*2+pogoDiameter+holePadding;}
     depth=outerCasingWidth+2*$tol;
@@ -79,7 +80,7 @@ module pinInset(pinNum){
         cube([width,depth,height]);
     }
 module pogoHoles(pinNum,includeLip){
-    pinInsetWidth=tpinWidth+2*$clear+holePadding;
+    pinInsetWidth=pogoDiameter+pogoLipRadius*2+holePadding;
     radius=pogoHoleDiameter/2;
     height=50;
     xoffset=extraPinInset+pinSpacing+(pinSpacing+pinInsetWidth)*pinNum; //how far the pin is placed from the origin along the x axis
@@ -95,6 +96,6 @@ module pogoHoles(pinNum,includeLip){
         cylinder(h=height,r=radius,center=true);
         if(includeLip){
         translate([0,0,-(height/2)+pogoProtection])
-        cylinder(h=pogoLipHeight,r=pogoLipRadius,center=true);
+        cylinder(h=pogoLipHeight,r=pogoLipRadius+pogoDiameter/2,center=true);
         }}}
     
