@@ -1,6 +1,6 @@
 numHoles=10;
-increment=0.1;//diameter in mm
-minHoleSize=0.9; //value in mm
+increment=0.05;//diameter in mm
+minHoleSize=1.4; //value in mm
 maxHoleSize=minHoleSize+increment*numHoles;
 sheetHeight=2;
 padding=0.2;
