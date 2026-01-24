@@ -5,11 +5,12 @@ tWidth=5.23;
 tDepth=tWidth;
 tHeight=5.59;
 tpinWidth=0.76;
-pinSpacing=1.5;
+pinSpacing=0.75
+;
 pinDepth=2;
 //casing dimensisons
 wallWidth=1;
-extraPinInset=-0.35;
+extraPinInset=0.76;
 //pogo pin dimensions
 pogoDiameter=1.49;
 pogoHoleDiameter=1.49;//as reccomended by datasheet
@@ -26,6 +27,14 @@ $clear=0.4;//clearance
 //==============
 //DERIVED VARIABLES
 //==============
+//STATIC
+numPins=3;
+//calculate pin locations
+//Middle of each pin can be found with 1.4+2.54*pinNumber starting at pinNumber=0 so:
+basePinLoc=[1.4,3.94,6.48];//coordinates on the base trasformer
+extraPinOffset=wallWidth+$clear;
+pinLoc=[1.4+extraPinOffset,3.94+extraPinOffset,6.48+extraPinOffset];
+
 
 //Casing
 innerCasingLength=tLength+(2*$clear);
@@ -62,37 +71,37 @@ scale(10){
     pogoHoles(1,lip);
     
     
-}}
+}} 
 
 module pinInset(pinNum){
     
-    width=pogoDiameter+pogoLipRadius*2+holePadding;
+    width=pogoDiameter+pogoLipRadius*2+holePadding+0.1;
     if (width<pogoLipRadius*2+pogoDiameter+holePadding){
 	width=pogoLipRadius*2+pogoDiameter+holePadding;}
     depth=outerCasingWidth+2*$tol;
     height=pinDepth;
-    xoffset=extraPinInset+pinSpacing+(pinSpacing+width)*pinNum; //how far the pin is placed from the origin along the x axis
+    
     //bottominset
-    translate([xoffset,-$tol,-$tol])
-        cube([width,depth,pogoProtection]);
+    translate([pinLoc[pinNum],(depth/2)-$tol,(height/2)-$tol])
+        cube([width,depth,pogoProtection],center=true);
     //topinset
-    translate([xoffset,-$tol,pogoLength+pogoProtection+height+$tol-height])
-        cube([width,depth,height]);
+    translate([pinLoc[pinNum],(depth/2)-$tol,pogoLength+pogoProtection+height+$tol-height/2])
+        cube([width,depth,height],center=true);
     }
 module pogoHoles(pinNum,includeLip){
     pinInsetWidth=pogoDiameter+pogoLipRadius*2+holePadding;
     radius=pogoHoleDiameter/2;
     height=50;
-    xoffset=extraPinInset+pinSpacing+(pinSpacing+pinInsetWidth)*pinNum; //how far the pin is placed from the origin along the x axis
+   
     
-    translate([xoffset+pinInsetWidth/2,(radius+wallWidth*2*pogoPositionRatio),height/2]){
+    translate([pinLoc[pinNum],(radius+wallWidth*2*pogoPositionRatio),height/2]){
         cylinder(h=height,r=radius,center=true);
     if(includeLip){
         translate([0,0,-(height/2)+pogoProtection])
         cylinder(h=pogoLipHeight,r=pogoLipRadius,center=true);
         }}
     
-    translate([xoffset+pinInsetWidth/2,outerCasingWidth-(radius+wallWidth*2*pogoPositionRatio),height/2]){
+    translate([pinLoc[pinNum],outerCasingWidth-(radius+wallWidth*2*pogoPositionRatio),height/2]){
         cylinder(h=height,r=radius,center=true);
         if(includeLip){
         translate([0,0,-(height/2)+pogoProtection])
