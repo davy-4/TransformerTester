@@ -13,7 +13,7 @@ wallWidth=1;
 extraPinInset=0.76;
 //pogo pin dimensions
 pogoDiameter=1.49;
-pogoHoleDiameter=1.49;//as reccomended by datasheet
+pogoHoleDiameter=1.85;//as found byas reccomended by datasheet holetesting
 pogoLength=4;//length of main body of pin
 pogoPositionRatio=0.7;//where the pogo hole is positioned, 0 is on the outside of the inset, 1 is on the inside of the inset
 pogoLipRadius=0.1;
