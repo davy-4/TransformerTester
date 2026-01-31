@@ -18,7 +18,7 @@ pogoLength=4;//length of main body of pin
 pogoPositionRatio=0.7;//where the pogo hole is positioned, 0 is on the outside of the inset, 1 is on the inside of the inset
 pogoLipRadius=0.1;
 pogoLipHeight=0.5;
-holePadding=0.3;
+holePadding=0.8;
 pogoProtection=2.5;//eqivalent slot on the bottom for protecting the bottom of the pogo pins from damage. set to 0 to disable this, reccommended set to pogostemlength+0.5
 //miscellaenious
 $tol=0.01;
