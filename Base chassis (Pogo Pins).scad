@@ -34,11 +34,12 @@ numPins=3;
 basePinLoc=[1.4,3.94,6.48];//coordinates on the base trasformer
 extraPinOffset=wallWidth+$clear;
 pinLoc=[1.4+extraPinOffset,3.94+extraPinOffset,6.48+extraPinOffset];
-
+//top inset for transformer flipped seating
+topSlotWidth=tWidth+2*$clear;
 
 //Casing
 innerCasingLength=tLength+(2*$clear);
-innerCasingWidth=tWidth+(2*$clear);
+innerCasingWidth=tWidth+(2*$clear)-2;
 innerCasingHeight=pogoLength+pogoProtection+pinDepth;
 outerCasingLength=innerCasingLength+2*wallWidth;//Length of outer casing
 outerCasingWidth=innerCasingWidth+2*(2*wallWidth+pogoHoleDiameter);//Depth of outer casing
@@ -59,7 +60,9 @@ scale(10){
         innerCasingLength,
         innerCasingWidth, 
         innerCasingHeight]);
-    
+    //topslot
+        translate([-$tol,outerCasingWidth/2-topSlotWidth/2,outerCasingHeight-pinDepth])
+        cube([outerCasingLength+2*$tol,topSlotWidth,pinDepth+$tol]);
     pinInset(0);
     pinInset(1);
     pinInset(2);
