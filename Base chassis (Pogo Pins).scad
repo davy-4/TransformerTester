@@ -13,12 +13,12 @@ wallWidth=1;
 extraPinInset=0.76;
 //pogo pin dimensions
 pogoDiameter=1.49;
-pogoHoleDiameter=1.85;//as found byas reccomended by datasheet holetesting
-pogoLength=4;//length of main body of pin
+pogoHoleDiameter=1.7;//as found by holetesting
+pogoLength=3.5;//length of main body of pin
 pogoPositionRatio=0.7;//where the pogo hole is positioned, 0 is on the outside of the inset, 1 is on the inside of the inset
 pogoLipRadius=0.1;
 pogoLipHeight=0.5;
-holePadding=0.8;
+holePadding=0.76;
 pogoProtection=2.5;//eqivalent slot on the bottom for protecting the bottom of the pogo pins from damage. set to 0 to disable this, reccommended set to pogostemlength+0.5
 //miscellaenious
 $tol=0.01;
@@ -28,6 +28,7 @@ $clear=0.4;//clearance
 //DERIVED VARIABLES
 //==============
 //STATIC
+lip=true;
 numPins=3;
 //calculate pin locations
 //Middle of each pin can be found with 1.4+2.54*pinNumber starting at pinNumber=0 so:
@@ -38,37 +39,40 @@ pinLoc=[1.4+extraPinOffset,3.94+extraPinOffset,6.48+extraPinOffset];
 topSlotWidth=tWidth+2*$clear;
 
 //Casing
+
 innerCasingLength=tLength+(2*$clear);
 innerCasingWidth=tWidth+(2*$clear)-2;
 innerCasingHeight=pogoLength+pogoProtection+pinDepth;
+
 outerCasingLength=innerCasingLength+2*wallWidth;//Length of outer casing
 outerCasingWidth=innerCasingWidth+2*(2*wallWidth+pogoHoleDiameter);//Depth of outer casing
 outerCasingHeight=innerCasingHeight-2*$tol;//Height of outer casing
-
+extra=0.5;
 scale(10){
     difference(){
     //outside
     cube([outerCasingLength,//Length of outer casing 
         outerCasingWidth, //Depth of outer casing
         outerCasingHeight]);//Height of outer casing
+        echo(outerCasingHeight)
     {
     //inner cube
-    translate([outerCasingLength/2-innerCasingLength/2,
+    translate([(outerCasingLength+extra)/2-innerCasingLength/2,
         outerCasingWidth/2-innerCasingWidth/2,
         -$tol]) 
         cube([
-        innerCasingLength,
+        innerCasingLength-extra,
         innerCasingWidth, 
         innerCasingHeight]);
     //topslot
-        translate([-$tol,outerCasingWidth/2-topSlotWidth/2,outerCasingHeight-pinDepth])
-        cube([outerCasingLength+2*$tol,topSlotWidth,pinDepth+$tol]);
+        translate([wallWidth,outerCasingWidth/2-topSlotWidth/2,outerCasingHeight-pinDepth])
+        cube([innerCasingLength,topSlotWidth,pinDepth+$tol]);
     pinInset(0);
     pinInset(1);
     pinInset(2);
     //pinInset(3);}
     }
-    lip=false;
+    
     pogoHoles(0,lip);
     pogoHoles(2,lip);
     pogoHoles(1,lip);
@@ -79,8 +83,8 @@ scale(10){
 module pinInset(pinNum){
     
     width=pogoDiameter+pogoLipRadius*2+holePadding+0.1;
-    if (width<pogoLipRadius*2+pogoDiameter+holePadding){
-	width=pogoLipRadius*2+pogoDiameter+holePadding;}
+    //if (width<pogoLipRadius*2+pogoDiameter+holePadding){
+	//width=pogoLipRadius*2+pogoDiameter+holePadding;}
     depth=outerCasingWidth+2*$tol;
     height=pinDepth;
     
@@ -95,7 +99,7 @@ module pogoHoles(pinNum,includeLip){
     pinInsetWidth=pogoDiameter+pogoLipRadius*2+holePadding;
     radius=pogoHoleDiameter/2;
     height=50;
-   
+    
     
     translate([pinLoc[pinNum],(radius+wallWidth*2*pogoPositionRatio),height/2]){
         cylinder(h=height,r=radius,center=true);
