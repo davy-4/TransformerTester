@@ -5,5 +5,5 @@
 class compute {
   public:
   // Functions
-  static int compute::levenshtein(const String& a, const String& b);
+  static int levenshtein(const String& a, const String& b);
 };

@@ -155,8 +155,6 @@ void serial::set(String input) {
 
   Serial.println(key);
   Serial.println(value);
-
-
 }
 
 void serial::placeholder(const String& input) {} // function placeholder

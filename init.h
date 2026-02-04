@@ -5,9 +5,9 @@
 class init {
   public:
   // Variables
-  static long init::start;
-  static long init::current;
+  static long start;
+  static long current;
 
   // Functions
-  static void init::initialize();
+  static void initialize();
 };

@@ -1,9 +1,11 @@
 #include <Arduino_FreeRTOS.h>
 #include "init.h"
 
-static long init::start;
-static long init::current;
+long init::start;
+long init::current;
 
 void init::initialize() {
+  Serial.println("start millis");
   init::start = millis();
+  Serial.println("got millis!!");
 };

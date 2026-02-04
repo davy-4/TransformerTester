@@ -11,11 +11,11 @@ class serial {
   static int testCountInt;
 
   // Functions
-  static void serial::serialMain(void *parameter);
+  static void serialMain(void *parameter);
 
   // Commands
-  static void serial::help();
-  static void serial::set(String input);
+  static void help();
+  static void set(String input);
 
-  static void serial::placeholder(const String& input);
+  static void placeholder(const String& input);
 };
