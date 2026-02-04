@@ -7,13 +7,13 @@ tHeight=5.59;
 tpinWidth=0.76;
 pinSpacing=0.75
 ;
-pinDepth=2;
+pinDepth=1;
 //casing dimensisons
 wallWidth=1;
 extraPinInset=0.76;
 //pogo pin dimensions
 pogoDiameter=1.49;
-pogoHoleDiameter=1.7;//as found by holetesting
+pogoHoleDiameter=1.78;//as found by holetesting
 pogoLength=3.5;//length of main body of pin
 pogoPositionRatio=0.7;//where the pogo hole is positioned, 0 is on the outside of the inset, 1 is on the inside of the inset
 pogoLipRadius=0.1;
@@ -57,16 +57,16 @@ scale(10){
         echo(outerCasingHeight)
     {
     //inner cube
-    translate([(outerCasingLength+extra)/2-innerCasingLength/2,
+    translate([(outerCasingLength)/2-innerCasingLength/2,
         outerCasingWidth/2-innerCasingWidth/2,
         -$tol]) 
         cube([
-        innerCasingLength-extra,
+        innerCasingLength,
         innerCasingWidth, 
         innerCasingHeight]);
     //topslot
-        translate([wallWidth,outerCasingWidth/2-topSlotWidth/2,outerCasingHeight-pinDepth])
-        cube([innerCasingLength,topSlotWidth,pinDepth+$tol]);
+        translate([wallWidth+extra/2,outerCasingWidth/2-topSlotWidth/2,outerCasingHeight-pinDepth])
+        cube([innerCasingLength-extra,topSlotWidth,pinDepth+$tol]);
     pinInset(0);
     pinInset(1);
     pinInset(2);
