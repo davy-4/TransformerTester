@@ -13,13 +13,13 @@ wallWidth=1;
 extraPinInset=0.76;
 //pogo pin dimensions
 pogoDiameter=1.49;
-pogoHoleDiameter=1.78;//as found by holetesting
+pogoHoleDiameter=1.75;//as found by holetesting
 pogoLength=3.5;//length of main body of pin
 pogoPositionRatio=0.7;//where the pogo hole is positioned, 0 is on the outside of the inset, 1 is on the inside of the inset
 pogoLipRadius=0.1;
 pogoLipHeight=0.5;
 holePadding=0.76;
-pogoProtection=2.5;//eqivalent slot on the bottom for protecting the bottom of the pogo pins from damage. set to 0 to disable this, reccommended set to pogostemlength+0.5
+pogoProtection=0.00;//eqivalent slot on the bottom for protecting the bottom of the pogo pins from damage. set to 0 to disable this, reccommended set to pogostemlength+0.5
 //miscellaenious
 $tol=0.01;
 $fn=32;
@@ -101,14 +101,14 @@ module pogoHoles(pinNum,includeLip){
     height=50;
     
     
-    translate([pinLoc[pinNum],(radius+wallWidth*2*pogoPositionRatio),height/2]){
+    translate([pinLoc[pinNum],(radius+wallWidth*2*pogoPositionRatio),height/2-$tol]){
         cylinder(h=height,r=radius,center=true);
     if(includeLip){
         translate([0,0,-(height/2)+pogoProtection])
         cylinder(h=pogoLipHeight,r=pogoLipRadius,center=true);
         }}
     
-    translate([pinLoc[pinNum],outerCasingWidth-(radius+wallWidth*2*pogoPositionRatio),height/2]){
+    translate([pinLoc[pinNum],outerCasingWidth-(radius+wallWidth*2*pogoPositionRatio),height/2-$tol]){
         cylinder(h=height,r=radius,center=true);
         if(includeLip){
         translate([0,0,-(height/2)+pogoProtection])
