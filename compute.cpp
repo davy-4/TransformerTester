@@ -1,5 +1,5 @@
-#include <Arduino_FreeRTOS.h>
 #include "compute.h"
+#include <Arduino.h>
 
 int compute::levenshtein(const String& a, const String& b) { // modified from https://dev.to/best_codes/understanding-levenshtein-distance-a-powerful-algorithm-for-string-comparison-4p4a
   int lengthA = a.length();

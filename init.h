@@ -1,5 +1,4 @@
 #pragma once
-
 #include <Arduino.h>
 
 class init {
@@ -8,6 +7,15 @@ class init {
   static long start;
   static long current;
 
+  // Variables for ledControl
+  static int ledBrightness; // 0-255 control
+  static bool ledLock;
+
   // Functions
   static void initialize();
+
+  static void ledControl(const String& args);
+
+  private:
+  static bool btnLock;
 };
