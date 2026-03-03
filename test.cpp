@@ -10,8 +10,16 @@
 #define p5 41
 #define p6 42
 
+pinMode(p1, INPUT);
+pinMode(p2, INPUT);
+pinMode(p3, INPUT);
+pinMode(p4, INPUT);
+pinMode(p5, INPUT);
+pinMode(p6, INPUT);
+
 bool test::testLock = 0;
-bool test::testTrigger = 0; // protected!!!
+bool checkLock = 0;
+bool test::testTrigger = 0;
 
 std::vector<String> failed;
 
@@ -41,59 +49,42 @@ int check(int in, int out) { // in-out format, +, -
   return temp;
 }
 
-void test::testMain(void *parameter) {
-  pinMode(p1, INPUT);
-  pinMode(p2, INPUT);
-  pinMode(p3, INPUT);
-  pinMode(p4, INPUT);
-  pinMode(p5, INPUT);
-  pinMode(p6, INPUT);
-  for (;;) {
-    Serial.println("s1");
-    if (testTrigger == 1) {
-      Serial.println("s1");
-      testTrigger == 0;
-      if (testLock == 0) {
-        Serial.println("s2");
-        testLock == 1;
-        // -- extensive test
-        /* Test 1: 1-2 */ check(p1,p2);
-        /* Test 2: 1-3 */ check(p1,p3);
-        /* Test 3: 2-3 */ check(p2,p3);
+void test::testMain() {
+  if (testLock == 0) {
+    testLock = 1;
+    /* Test 1: 1-2 */ check(p1,p2);
+    /* Test 2: 1-3 */ check(p1,p3);
+    /* Test 3: 2-3 */ check(p2,p3);
 
-        /* Test 4: 4-5 */ check(p4,p5);
-        /* Test 5: 4-6 */ check(p4,p6);
-        /* Test 6: 5-6 */ check(p5,p6);
+    /* Test 4: 4-5 */ check(p4,p5);
+    /* Test 5: 4-6 */ check(p4,p6);
+    /* Test 6: 5-6 */ check(p5,p6);
 
-        /* Test 7: 1-4 */ check(p1,p4);
-        /* Test 8: 1-5 */ check(p1,p5);
-        /* Test 9: 1-6 */ check(p1,p6);
+    /* Test 7: 1-4 */ check(p1,p4);
+    /* Test 8: 1-5 */ check(p1,p5);
+    /* Test 9: 1-6 */ check(p1,p6);
 
-        /* Test 10: 2-4 */ check(p2,p4);
-        /* Test 11: 2-5 */ check(p2,p5);
-        /* Test 12: 2-6 */ check(p2,p6);
+    /* Test 10: 2-4 */ check(p2,p4);
+    /* Test 11: 2-5 */ check(p2,p5);
+    /* Test 12: 2-6 */ check(p2,p6);
 
-        /* Test 13: 3-4 */ check(p3,p4);
-        /* Test 14: 3-5 */ check(p3,p5);
-        /* Test 15: 3-6 */ check(p3,p6);
+    /* Test 13: 3-4 */ check(p3,p4);
+    /* Test 14: 3-5 */ check(p3,p5);
+    /* Test 15: 3-6 */ check(p3,p6);
 
-        if (failed.empty()) {
-          Serial.println("PASS!");
-        } else {
-          Serial.print("FAIL:");
-          for(const String& s : failed) {
-            Serial.print(" ");
-            Serial.print(s);
-          }
-        }
-        testLock == 0;
-      } else {
-        if (Serial.available()) {
-          Serial.println("Denied, task is locked");
-        }
-      }
+    if (failed.empty()) {
+      return("PASS");
     } else {
-      vTaskDelay(100 / portTICK_PERIOD_MS);
+      //Serial.print("FAIL:");
+      /*for(const String& s : failed) {
+        Serial.print(" ");
+        Serial.print(s);
+      }*/
+      return(failed);
     }
+    testLock = 0;
+  } else {
+    return("Denied");
   }
+  return("out");
 }
