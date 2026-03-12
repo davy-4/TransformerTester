@@ -22,11 +22,15 @@ tpinWidth=0.76;
 //The distance from one pin to the consecutive one
 pinSpacing=0.75;
 
+//The distance that the pins extrude from the side of the body
+pinExtrusion=0.66;
+
+
 //--Casing Dimensions--
 
 //The depth that the surface that the legs rest on is indented from the top of the main chassis
 //-Partially outdated after removal of individual pinslots
-pinDepth=1;
+pinDepth=3;
 
 //The width of the walls enclosing the transformer
 //-Partially outdated after pogo holes added
@@ -59,6 +63,21 @@ holePadding=0.76;
 //slot on the bottom for protecting the bottom of the pogo pins from damage. set to 0 to disable this, reccommended set to pogostemlength+0.5
 //-Not used when PCB's are soldered to board or PCB
 pogoProtection=0.00;
+
+
+//--Funnel--
+funnelHeight = 10;
+// Using an angle (e.g., 30 degrees) makes the slope constant 
+// regardless of height changes.
+funnelSlopeAngle = 5; 
+
+// Funnel Derived Logic:
+// tan(angle) = opposite / adjacent -> expansion = height * tan(angle)
+funnelExpansion = funnelHeight * tan(funnelSlopeAngle);
+
+
+
+
 
 //--Miscellaneous--
 //negligible variable used to avoid Z-fighting
@@ -107,7 +126,10 @@ outerCasingLength=innerCasingLength+2*wallWidth;//Length of outer casing
 outerCasingWidth=innerCasingWidth+2*(2*wallWidth+pogoHoleDiameter);//Depth of outer casing
 outerCasingHeight=innerCasingHeight-2*$tol;//Height of outer casing
 
-
+// We calculate scale as: (Original + 2*Expansion) / Original
+// This is moved here so the module stays clean
+funnelScaleX = (outerCasingLength + 2 * funnelExpansion) / outerCasingLength;
+funnelScaleY = (outerCasingWidth + 2 * funnelExpansion) / outerCasingWidth;
 
 //Main code for assembling the chassis
 
@@ -216,4 +238,24 @@ module pogoHoles(pinNum,includeLip){
         translate([0,0,-(height/2)+pogoProtection])
             cylinder(h=pogoLipHeight,r=pogoLipRadius+pogoDiameter/2,center=true);
         }}}
-    
+
+module funnel(){
+    pinGapStart = pinLoc[0] - $clear;
+    pinGapEnd = pinLoc[2] + $clear;
+    funnelPinGapLength = pinGapEnd - pinGapStart;
+        
+    translate([outerCasingLength/2, outerCasingWidth/2, outerCasingHeight])
+    // Uses the pre-calculated vector scale from the declarations
+    linear_extrude(height = funnelHeight, scale = [funnelScaleX, funnelScaleY])
+    {
+        difference(){
+            square([outerCasingLength, outerCasingWidth], center = true);
+            
+            union() {
+                square([innerCasingLength - topSlotOffset, topSlotWidth], center = true);
+                square([funnelPinGapLength, pinExtrusion + tWidth + 2 * pinExtrusion + 2 * $clear], center = true);
+            }
+        }    
+    }
+}
+funnel();
